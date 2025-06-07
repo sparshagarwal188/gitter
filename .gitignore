@@ -1,0 +1,5 @@
+.gitter/
+
+.idea/
+dependency-reduced-pom.xml
+target/
