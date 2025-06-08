@@ -42,9 +42,9 @@ Now you can use gitter just like git command.
 
 ## Future Enhancements
 
-> Branching and merging
-> Stashing
-> Remote repository simulation
-> Aliases and command chaining
-> Persistent log format improvements
+- Branching and merging
+- Stashing
+- Remote repository simulation
+- Aliases and command chaining
+- Persistent log format improvements
 
