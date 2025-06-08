@@ -1,6 +1,6 @@
 package tool.gitter.command;
 
-import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.*;
 import tool.gitter.model.Action;
 import tool.gitter.hash.HashApplier;
 import tool.gitter.model.Commit;
@@ -11,15 +11,31 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.BasicFileAttributes;
 import java.security.NoSuchAlgorithmException;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
 public class StatusCommand extends Command {
 
     private HashApplier hashApplier;
-    public StatusCommand(Action action, CommandLine commandLine) throws NoSuchAlgorithmException {
-        super(action, commandLine);
+    private final CommandLine commandLine;
+    public StatusCommand(Action action, String[] ar) throws NoSuchAlgorithmException {
+        super(action);
+        commandLine = initCommandLine(ar);
         hashApplier = new HashApplier("SHA-1");
+    }
+
+    private CommandLine initCommandLine(String[] ar) {
+        CommandLineParser parser = new DefaultParser();
+        Options options = new Options();
+
+        getOptions().forEach(options::addOption);
+        return initCommandLine(ar, parser, options);
+    }
+
+    private List<Option> getOptions() {
+        return new ArrayList<>();
     }
 
     public String execute() {

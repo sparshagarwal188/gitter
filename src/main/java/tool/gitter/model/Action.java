@@ -1,8 +1,5 @@
 package tool.gitter.model;
 
-import org.apache.commons.cli.Options;
-import tool.gitter.cli.OptionsFactory;
-
 import java.util.Optional;
 
 import static tool.gitter.model.Constants.*;
@@ -89,10 +86,6 @@ public enum Action {
 
     public String getDescription() {
         return this.description;
-    }
-
-    public Options getOptions() {
-        return OptionsFactory.getOptions(this);
     }
 
     public static Optional<Action> getAction(String arg) {

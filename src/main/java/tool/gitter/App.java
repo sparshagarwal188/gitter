@@ -26,18 +26,8 @@ public class App {
         }
 
         Action action = actionOptional.get();
-        Options options = action.getOptions();
-        CommandLineParser parser = new DefaultParser();
-        CommandLine commandLine;
-        try {
-            commandLine = parser.parse(options, ar);
-        } catch (ParseException e) {
-            System.out.println("Please enter valid command options\n" +
-                    "use 'git help' for documentation");
-            return;
-        }
 
-        Command command = Command.get(action, commandLine);
+        Command command = Command.get(action, ar);
         System.out.println(command.execute());
     }
 }

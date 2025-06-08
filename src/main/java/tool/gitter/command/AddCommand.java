@@ -1,6 +1,6 @@
 package tool.gitter.command;
 
-import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.*;
 import tool.gitter.dao.FileObjectPersister;
 import tool.gitter.exception.FileOperationException;
 import tool.gitter.hash.HashApplier;
@@ -20,15 +20,30 @@ import static tool.gitter.model.Constants.INDEX;
 public class AddCommand extends Command {
 
     private final HashApplier hashApplier;
-    public AddCommand(Action action, CommandLine commandLine) throws Exception {
-        super(action, commandLine);
+    private final CommandLine commandLine;
+    public AddCommand(Action action, String[] ar) throws Exception {
+        super(action);
+        commandLine = initCommandLine(ar);
         hashApplier = new HashApplier("SHA-1");
     }
     public AddCommand(Action action, CommandLine commandLine, HashApplier hashApplier, FileObjectPersister objectPersister, Path userDirectory) {
-        super(action, commandLine);
+        super(action);
+        this.commandLine = commandLine;
         this.hashApplier = hashApplier;
         this.objectPersister = objectPersister;
         this.userDirectory = userDirectory;
+    }
+
+    private CommandLine initCommandLine(String[] ar) {
+        CommandLineParser parser = new DefaultParser();
+        Options options = new Options();
+
+        getOptions().forEach(options::addOption);
+        return initCommandLine(ar, parser, options);
+    }
+
+    private List<Option> getOptions() {
+        return new ArrayList<>();
     }
 
     @Override

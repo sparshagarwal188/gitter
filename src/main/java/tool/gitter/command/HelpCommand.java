@@ -1,14 +1,32 @@
 package tool.gitter.command;
 
-import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.*;
 import tool.gitter.model.Action;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
 
 public class HelpCommand extends Command {
-    public HelpCommand(Action action, CommandLine commandLine) {
-        super(action, commandLine);
+
+    private final CommandLine commandLine;
+    public HelpCommand(Action action, String[] ar) {
+        super(action);
+        commandLine = initCommandLine(ar);
     }
+
+    private CommandLine initCommandLine(String[] ar) {
+        CommandLineParser parser = new DefaultParser();
+        Options options = new Options();
+
+        getOptions().forEach(options::addOption);
+        return initCommandLine(ar, parser, options);
+    }
+
+    private List<Option> getOptions() {
+        return new ArrayList<>();
+    }
+
     @Override
     public String execute() {
         String[] args = commandLine.getArgs();

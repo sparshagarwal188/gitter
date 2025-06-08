@@ -1,6 +1,6 @@
 package tool.gitter.command;
 
-import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.*;
 import tool.gitter.model.Action;
 import tool.gitter.dao.FileObjectPersister;
 import tool.gitter.exception.ApplicationException;
@@ -19,20 +19,29 @@ import static tool.gitter.model.Constants.*;
 public abstract class Command {
 
     protected final Action action;
-    protected final CommandLine commandLine;
+
     protected Path userDirectory;
     protected FileObjectPersister objectPersister;
 
-    public Command(Action action, CommandLine commandLine) {
+    public Command(Action action) {
         this.action = action;
-        this.commandLine = commandLine;
         setDirectory();
     }
 
-    public static Command get(Action action, CommandLine commandLine) throws ApplicationException {
+    protected CommandLine initCommandLine(String[] ar, CommandLineParser parser, Options options) {
+        try {
+            return parser.parse(options, ar);
+        } catch (ParseException e) {
+            System.out.println("Please enter valid command options\n" +
+                    "use 'git help' for documentation");
+            throw new ApplicationException();
+        }
+    }
+
+    public static Command get(Action action, String[] ar) throws ApplicationException {
         Class<? extends Command> commandClazz = CommandMapService.getCommandClass(action);
         try {
-            return commandClazz.getDeclaredConstructor(Action.class, CommandLine.class).newInstance(action, commandLine);
+            return commandClazz.getDeclaredConstructor(Action.class, String[].class).newInstance(action, ar);
         } catch (Exception e) {
             System.out.println("failed to execute command!\n" +
                     "cause : " + e.getMessage() + "\n" +

@@ -1,6 +1,6 @@
 package tool.gitter.command;
 
-import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.*;
 import tool.gitter.comparison.ComparisonProvider;
 import tool.gitter.comparison.Diff_Match_Patch;
 import tool.gitter.hash.HashApplier;
@@ -17,9 +17,23 @@ import java.util.*;
 public class DiffCommand extends Command {
 
     private HashApplier hashApplier;
-    public DiffCommand(Action action, CommandLine commandLine) throws NoSuchAlgorithmException {
-        super(action, commandLine);
+    private final CommandLine commandLine;
+    public DiffCommand(Action action, String[] ar) throws NoSuchAlgorithmException {
+        super(action);
+        commandLine = initCommandLine(ar);
         hashApplier = new HashApplier("SHA-1");
+    }
+
+    private CommandLine initCommandLine(String[] ar) {
+        CommandLineParser parser = new DefaultParser();
+        Options options = new Options();
+
+        getOptions().forEach(options::addOption);
+        return initCommandLine(ar, parser, options);
+    }
+
+    private List<Option> getOptions() {
+        return new ArrayList<>();
     }
 
     @Override

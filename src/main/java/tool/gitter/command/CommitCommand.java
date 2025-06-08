@@ -1,7 +1,7 @@
 package tool.gitter.command;
 
 import lombok.SneakyThrows;
-import org.apache.commons.cli.CommandLine;
+import org.apache.commons.cli.*;
 import tool.gitter.model.Action;
 import tool.gitter.hash.HashApplier;
 import tool.gitter.model.Commit;
@@ -20,10 +20,36 @@ import static tool.gitter.model.Constants.*;
 public class CommitCommand extends Command {
 
     private final HashApplier hashApplier;
+    private final CommandLine commandLine;
 
-    public CommitCommand(Action action, CommandLine commandLine) throws NoSuchAlgorithmException {
-        super(action, commandLine);
+    public CommitCommand(Action action, String[] ar) throws NoSuchAlgorithmException {
+        super(action);
+        commandLine = initCommandLine(ar);
         hashApplier = new HashApplier("SHA-1");
+    }
+
+    private CommandLine initCommandLine(String[] ar) {
+        CommandLineParser parser = new DefaultParser();
+        Options options = new Options();
+
+        getOptions().forEach(options::addOption);
+        return initCommandLine(ar, parser, options);
+    }
+
+    private List<Option> getOptions() {
+        Option messageOption = Option.builder("m")
+                .argName("commitMessage")
+                .hasArg()
+                .desc("A message to describe the commit")
+                .longOpt("message")
+                .build();
+
+        Option addFilesToIndexOption = Option.builder("a")
+                .desc("add all files to index area before commit")
+                .longOpt("all")
+                .build();
+
+        return List.of(messageOption, addFilesToIndexOption);
     }
 
     @Override
